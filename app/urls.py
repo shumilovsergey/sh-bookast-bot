@@ -3,6 +3,5 @@ from . import views
 
 
 urlpatterns = [
-    path('', views.home, name='home'),
-    path('api/hello/', views.HelloWorldView.as_view(), name='hello-world'),
+    path('', views.webhook, name='webhook'),
 ]
