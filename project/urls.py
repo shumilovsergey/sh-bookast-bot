@@ -1,6 +1,5 @@
 
 from django.contrib import admin
-from app.views import webhook
 from django.urls import path, include
 
 urlpatterns = [
