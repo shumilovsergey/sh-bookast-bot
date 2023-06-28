@@ -4,8 +4,17 @@ from project.const import BOT_TOKEN
 
 def message_get(request):
     data = json.loads(request.body.decode('utf-8'))
-    chat_id = data["message"]["chat"]["id"]
-    message_id = data["message"]["message_id"]
+
+    if 'callback_query' in data:
+        callback = data['callback_query']['data']
+        message_id = "none"
+        chat_id = "none"
+
+    else:
+        chat_id = data["message"]["chat"]["id"]
+        message_id = data["message"]["message_id"]
+        callback = "none"
+
     ###
     try: 
         text = data["message"]["text"]
@@ -44,7 +53,8 @@ def message_get(request):
     message = {
         "data" : {
             "chat_id" : chat_id,
-            "message_id" : message_id
+            "message_id" : message_id,
+            "callback" : callback
         }, 
         "content" : {
             "text" : text,
@@ -55,17 +65,45 @@ def message_get(request):
     }
     return message
 
-def text_send(message):
-    chat_id = message["data"]["chat_id"]
-    text = message["content"]["text"]
-    data = { 
-        "chat_id": chat_id,
-        "text": text
-    }
-    response = requests.post(f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage", data)
-    return response
+# def text_send(message):
+#     chat_id = message["data"]["chat_id"]
+#     text = message["content"]["text"]
+
+#     data = { 
+#         "chat_id": chat_id,
+#         "text": text,
+#     }
+#     response = requests.post(f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage", data)
+#     print(response.json())
+#     return response
+
+
+# def inline(message):
+#     chat_id = message["data"]["chat_id"]
+#     text = message["content"]["text"]
+
+
+#     keyboard = {
+#         'inline_keyboard': [
+#             [
+#                 {'text': 'Option 1', 'callback_data': '1'},
+#                 {'text': 'Option 2', 'callback_data': '2'}
+#             ],
+#             [
+#                 {'text': 'Option 3', 'callback_data': '3'}
+#             ]
+#         ]
+#     }
 
 
 
+#     data = { 
+#         "chat_id": chat_id,
+#         "text": text,
+#         "reply_markup" : json.dumps(keyboard)
+#     }
+#     response = requests.post(f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage", data)
+#     print(response.json())
+#     return response
 
 
