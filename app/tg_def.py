@@ -65,19 +65,44 @@ def message_get(request):
     }
     return message
 
-# def text_send(message):
-#     chat_id = message["data"]["chat_id"]
-#     text = message["content"]["text"]
+def text_send(message):
+    chat_id = message["data"]["chat_id"]
+    text = message["content"]["text"]
 
-#     data = { 
-#         "chat_id": chat_id,
-#         "text": text,
-#     }
-#     response = requests.post(f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage", data)
-#     print(response.json())
-#     return response
+    data = { 
+        "chat_id": chat_id,
+        "text": text,
+    }
+    response = requests.post(f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage", data)
+    print(response.json())
+    return response
 
 
+def file_send(photo_id, chat_id):
+    bot_token = BOT_TOKEN
+
+    # Constructing the file download URL using the file_id
+    file_url = f'https://api.telegram.org/bot{bot_token}/getFile?file_id={photo_id}'
+
+    # Fetching the file path using the file_id
+    response = requests.get(file_url)
+    file_path = response.json()['result']['file_path']
+
+    # Constructing the file download URL
+    download_url = f'https://api.telegram.org/file/bot{bot_token}/{file_path}'
+
+    # Sending the file to the specified chat
+    file_data = requests.get(download_url).content
+
+    url = f'https://api.telegram.org/bot{bot_token}/sendPhoto'
+    payload = {'chat_id': chat_id, 'photo': photo_id}
+
+
+    response = requests.post(url, data=payload)
+    print(response.json())   
+
+
+    return response
 # def inline(message):
 #     chat_id = message["data"]["chat_id"]
 #     text = message["content"]["text"]
